@@ -17,7 +17,7 @@ if __name__ == "__main__":
     url_real ='https://weloma.net'
     ######################此处输入想要爬的漫画的网址(带目录的那页)######################
     #注意;必须带有最后的'/'，否则会影响爬虫运作
-    url = 'https://weloma.net/2019/'
+    url = 'http://xxxxx/'
     header = {
             'accept-language':'zh-CN,zh;q=0.9,en;q=0.8;en-GB;q=0.7,en-US;q=0.6',
             'cache-control': 'max-age=0',
