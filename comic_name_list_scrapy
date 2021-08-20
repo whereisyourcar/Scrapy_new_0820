@@ -1,0 +1,93 @@
+'''------------------------------------------------------------------------------------------------------
+
+#本项目主要用于将漫画网站里的网页代码按顺序下载到本地的网页文件里
+#漫画网站：某特定网站
+#本地位置为:E:\scrapy_result\     （文件夹需要自己准备一个，在调用all_list_scrapy时也需要对mypath参数进行同步修改）
+
+*此爬虫用于整部漫画的图片爬取
+
+------------------------------------------------------------------------------------------------------'''
+
+from all_list_scrapy import GeiYePa    #调用了all_list_scrapy的函数(实际上这个函数也写在了本代码的最下方，需要的时候可以调上来使用)
+import os
+import requests
+from bs4 import BeautifulSoup
+
+if __name__ == "__main__":
+    url_real ='https://weloma.net'
+    ######################此处输入想要爬的漫画的网址(带目录的那页)######################
+    #注意;必须带有最后的'/'，否则会影响爬虫运作
+    url = 'https://weloma.net/2019/'
+    header = {
+            'accept-language':'zh-CN,zh;q=0.9,en;q=0.8;en-GB;q=0.7,en-US;q=0.6',
+            'cache-control': 'max-age=0',
+            'accept-encoding': 'gzip, deflate, br',
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'
+        }
+
+    response = requests.get(url, headers=header)  # 发送带有请求头的请求
+    print(response)  # 输出响应信号
+    page_content = response.content.decode("utf-8")  # 将网页内容以utf-8的编码格式输出
+
+    soup = BeautifulSoup(page_content,'html.parser')
+    loop_flag=0
+    for k in soup.find_all(name='a', target="_blank"):
+    #a = soup.find_all(name='ul',class_="list-chapters at-series")
+    #class="list-chapters at-series"
+        a = url_real + k['href']
+        b = k['title']
+        #if b=="Chapter 10":            #如果出现了爬虫中途卡死的情况，那么就用这个if语句来调整重启爬虫代码时想开始爬的漫画话数
+        loop_flag=1                     #如果要使用if从句，则这句代码要放置在if从句里面
+        print(f"now {b} is downloading")
+        if loop_flag==1:
+            GeiYePa(a,header,b)
+'''------------------------------------------------------------------------------------------------------
+
+代码内容至此结束，下方的代码是GeiYePa函数，用来给看的
+
+------------------------------------------------------------------------------------------------------'''
+
+
+
+
+
+
+
+
+
+
+
+
+# def GeiYePa(url, header,title):
+#
+#     response = requests.get(url, headers=header)                                                 #发送带有请求头的请求
+#     print(response)                                                                              #输出响应信号
+#     page_content = response.content.decode("utf-8")                                              #将网页内容以utf-8的编码格式输出
+#     #print(page_content)                                                                          #保存
+#     #open(f"E:\\scrapy_result\\白毛jk\\result.html", "w", encoding="utf-8").write(page_content)   #保存网页
+#
+#     #解析环节
+#     soup = BeautifulSoup(page_content, "html.parser")
+#     imgs = soup.find_all(name='img')                                                              #获取网页里关于所有img标签的数组
+#     #print(imgs)
+#     num = 1
+#     for a in imgs:                                                                                #遍历img标签数组里的所有值
+#         data_address = a.get('data-aload')                                                        #用get方法将每个img标签里面对应的属性抽取出来
+#         if data_address !=  None:                                                                 #只对有src值的img标签进行操作
+#             data_address=data_address.split()[0];                                                 #返回的src值里有一行空行，此处将其处理了
+#             #print(data_address)
+#             response = requests.get(data_address, headers=header)  # 发送带有请求头的请求
+#             print(response)
+#             #time.sleep(5)                                                                        #延时装置
+#             print(f"{num}.jpg downloading")
+#             mypath=f'E:\\scrapy_result\\kobayashi\\{title}'
+#             if os.path.exists(mypath):                                                            #判断该文件夹是否存在
+#                 open(f"{mypath}\\{num}.jpg", "wb").write(response.content)                        #将response的内容(即图片)保存
+#             else:
+#                 os.mkdir(mypath)                                                                  #如该文件夹不存在，则创建文件夹
+#                 print("folder created")
+#                 open(f"{mypath}\\{num}.jpg", "wb").write(response.content)                        #将response的内容(即图片)保存
+#             num += 1
+#     print('download is over')
+#     return 0
