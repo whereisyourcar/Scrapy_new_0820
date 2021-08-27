@@ -33,11 +33,14 @@ def GeiYePa(url, header,title):
             print(f"{num}.jpg downloading")
             mypath=f'E:\\scrapy_result\\kobayashi\\{title}'
             if os.path.exists(mypath):                                                            #判断该文件夹是否存在
-                open(f"{mypath}\\{num}.jpg", "wb").write(response.content)                        #将response的内容(即图片)保存
+                if num < 10:
+                    open(f"{mypath}\\0{num}.jpg", "wb").write(response.content)                   #将response的内容(即图片)保存
+                else:
+                    open(f"{mypath}\\{num}.jpg", "wb").write(response.content)                    #将response的内容(即图片)保存
             else:
                 os.mkdir(mypath)                                                                  #如该文件夹不存在，则创建文件夹
                 print("folder created")
-                open(f"{mypath}\\{num}.jpg", "wb").write(response.content)                        #将response的内容(即图片)保存
+                open(f"{mypath}\\0{num}.jpg", "wb").write(response.content)                       #将response的内容(即图片)保存
             num += 1
     print('download is over')
     return 0
